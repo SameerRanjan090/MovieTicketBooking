@@ -46,12 +46,24 @@ public class Database {
                     FOREIGN KEY (theatre_id) REFERENCES theatres(id)
                 )
                 """;
+
         String customerTable = """
         CREATE TABLE IF NOT EXISTS customers (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             email TEXT NOT NULL UNIQUE,
             phone TEXT NOT NULL
+        )
+        """;
+
+        String seatTable = """
+        CREATE TABLE IF NOT EXISTS seats (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            theatre_id INTEGER NOT NULL,
+            seat_number TEXT NOT NULL,
+            available INTEGER NOT NULL DEFAULT 1,
+            UNIQUE(theatre_id, seat_number),
+            FOREIGN KEY (theatre_id) REFERENCES theatres(id)
         )
         """;
 
@@ -62,6 +74,7 @@ public class Database {
             statement.execute(theatreTable);
             statement.execute(showTable);
             statement.execute(customerTable);
+            statement.execute(seatTable);
 
             System.out.println("Database initialized successfully!");
 
