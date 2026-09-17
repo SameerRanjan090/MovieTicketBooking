@@ -46,6 +46,14 @@ public class Database {
                     FOREIGN KEY (theatre_id) REFERENCES theatres(id)
                 )
                 """;
+        String customerTable = """
+        CREATE TABLE IF NOT EXISTS customers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            phone TEXT NOT NULL
+        )
+        """;
 
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
@@ -53,6 +61,7 @@ public class Database {
             statement.execute(movieTable);
             statement.execute(theatreTable);
             statement.execute(showTable);
+            statement.execute(customerTable);
 
             System.out.println("Database initialized successfully!");
 
