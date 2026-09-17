@@ -8,9 +8,11 @@ import java.util.List;
 public class TheatreService {
 
     private final TheatreDAO theatreDAO;
+    private final SeatService seatService;
 
     public TheatreService() {
         theatreDAO = new TheatreDAO();
+        seatService = new SeatService();
     }
 
     public void addTheatre(String name, String location, int totalSeats) {
@@ -37,6 +39,13 @@ public class TheatreService {
         );
 
         theatreDAO.addTheatre(theatre);
+
+        // Find the newly created theatre and generate its seats
+        List<Theatre> theatres = theatreDAO.getAllTheatres();
+
+        Theatre latestTheatre = theatres.get(theatres.size() - 1);
+
+        seatService.generateSeats(latestTheatre.getId());
     }
 
     public List<Theatre> getAllTheatres() {
@@ -53,17 +62,21 @@ public class TheatreService {
             String location,
             int totalSeats) {
 
-        Theatre existingTheatre = theatreDAO.getTheatreById(id);
+        Theatre existingTheatre =
+                theatreDAO.getTheatreById(id);
 
         if (existingTheatre == null) {
             System.out.println("Theatre not found.");
             return;
         }
 
-        if (name == null || name.isBlank() ||
-                location == null || location.isBlank()) {
+        if (name == null || name.isBlank()) {
+            System.out.println("Theatre name cannot be empty.");
+            return;
+        }
 
-            System.out.println("Theatre details cannot be empty.");
+        if (location == null || location.isBlank()) {
+            System.out.println("Location cannot be empty.");
             return;
         }
 
@@ -84,7 +97,8 @@ public class TheatreService {
 
     public void deleteTheatre(int id) {
 
-        Theatre theatre = theatreDAO.getTheatreById(id);
+        Theatre theatre =
+                theatreDAO.getTheatreById(id);
 
         if (theatre == null) {
             System.out.println("Theatre not found.");

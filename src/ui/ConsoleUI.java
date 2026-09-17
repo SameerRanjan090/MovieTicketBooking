@@ -13,12 +13,16 @@ import service.TheatreService;
 import java.util.List;
 import java.util.Scanner;
 
+import model.Seat;
+import service.SeatService;
+
 public class ConsoleUI {
 
     private final MovieService movieService;
     private final TheatreService theatreService;
     private final ShowService showService;
     private final CustomerService customerService;
+    private final SeatService seatService;
     private final Scanner scanner;
 
     public ConsoleUI() {
@@ -26,6 +30,7 @@ public class ConsoleUI {
         theatreService = new TheatreService();
         showService = new ShowService();
         customerService = new CustomerService();
+        seatService = new SeatService();
         scanner = new Scanner(System.in);
     }
 
@@ -58,6 +63,10 @@ public class ConsoleUI {
                     break;
 
                 case 5:
+                    viewSeats();
+                    break;
+
+                case 6:
                     running = false;
                     System.out.println(
                             "\nThank you for using Movie Ticket Booking System!"
@@ -85,7 +94,8 @@ public class ConsoleUI {
         System.out.println("2. Manage Theatres");
         System.out.println("3. Manage Shows");
         System.out.println("4. Manage Customers");
-        System.out.println("5. Exit");
+        System.out.println("5. View Theatre Seats");
+        System.out.println("6. Exit");
         System.out.println("========================================");
     }
 
@@ -882,6 +892,71 @@ public class ConsoleUI {
         } else {
             System.out.println("Delete cancelled.");
         }
+    }
+    // ========================================
+// SEAT MANAGEMENT
+// ========================================
+
+    private void viewSeats() {
+
+        System.out.println("\n--- View Theatre Seats ---");
+
+        viewTheatres();
+
+        int theatreId =
+                readInt("Enter theatre ID: ");
+
+        Theatre theatre =
+                theatreService.getTheatreById(theatreId);
+
+        if (theatre == null) {
+            System.out.println("Theatre not found.");
+            return;
+        }
+
+        List<Seat> seats =
+                seatService.getSeatsByTheatre(theatreId);
+
+        if (seats.isEmpty()) {
+            System.out.println("No seats found for this theatre.");
+            return;
+        }
+
+        System.out.println(
+                "\n========== " +
+                        theatre.getName() +
+                        " SEAT MAP =========="
+        );
+
+        int count = 0;
+
+        for (Seat seat : seats) {
+
+            String status =
+                    seat.isAvailable()
+                            ? "[Available]"
+                            : "[Booked]";
+
+            System.out.printf(
+                    "%-6s %-12s",
+                    seat.getSeatNumber(),
+                    status
+            );
+
+            count++;
+
+            if (count % 5 == 0) {
+                System.out.println();
+            }
+        }
+
+        if (count % 5 != 0) {
+            System.out.println();
+        }
+
+        System.out.println(
+                "========================================"
+        );
     }
 
     // ========================================

@@ -1,14 +1,18 @@
-package service;
+package dao;
 
-import dao.TheatreDAO;
+import database.Database;
 import model.Theatre;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TheatreDAO {
 
+    // CREATE
     public void addTheatre(Theatre theatre) {
 
         String sql = """
@@ -17,7 +21,8 @@ public class TheatreDAO {
                 """;
 
         try (Connection connection = Database.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
             statement.setString(1, theatre.getName());
             statement.setString(2, theatre.getLocation());
@@ -28,11 +33,13 @@ public class TheatreDAO {
             System.out.println("Theatre added successfully!");
 
         } catch (SQLException e) {
+
             System.out.println("Failed to add theatre.");
             e.printStackTrace();
         }
     }
 
+    // READ ALL
     public List<Theatre> getAllTheatres() {
 
         List<Theatre> theatres = new ArrayList<>();
@@ -40,8 +47,10 @@ public class TheatreDAO {
         String sql = "SELECT * FROM theatres";
 
         try (Connection connection = Database.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql);
+             ResultSet resultSet =
+                     statement.executeQuery()) {
 
             while (resultSet.next()) {
 
@@ -56,6 +65,7 @@ public class TheatreDAO {
             }
 
         } catch (SQLException e) {
+
             System.out.println("Failed to retrieve theatres.");
             e.printStackTrace();
         }
@@ -63,16 +73,20 @@ public class TheatreDAO {
         return theatres;
     }
 
+    // READ ONE
     public Theatre getTheatreById(int id) {
 
-        String sql = "SELECT * FROM theatres WHERE id = ?";
+        String sql =
+                "SELECT * FROM theatres WHERE id = ?";
 
         try (Connection connection = Database.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
             statement.setInt(1, id);
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            try (ResultSet resultSet =
+                         statement.executeQuery()) {
 
                 if (resultSet.next()) {
 
@@ -86,6 +100,7 @@ public class TheatreDAO {
             }
 
         } catch (SQLException e) {
+
             System.out.println("Failed to find theatre.");
             e.printStackTrace();
         }
@@ -93,6 +108,7 @@ public class TheatreDAO {
         return null;
     }
 
+    // UPDATE
     public void updateTheatre(Theatre theatre) {
 
         String sql = """
@@ -102,45 +118,63 @@ public class TheatreDAO {
                 """;
 
         try (Connection connection = Database.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
             statement.setString(1, theatre.getName());
             statement.setString(2, theatre.getLocation());
             statement.setInt(3, theatre.getTotalSeats());
             statement.setInt(4, theatre.getId());
 
-            int rowsAffected = statement.executeUpdate();
+            int rowsAffected =
+                    statement.executeUpdate();
 
             if (rowsAffected > 0) {
-                System.out.println("Theatre updated successfully!");
+
+                System.out.println(
+                        "Theatre updated successfully!"
+                );
+
             } else {
+
                 System.out.println("Theatre not found.");
             }
 
         } catch (SQLException e) {
+
             System.out.println("Failed to update theatre.");
             e.printStackTrace();
         }
     }
 
+    // DELETE
     public void deleteTheatre(int id) {
 
-        String sql = "DELETE FROM theatres WHERE id = ?";
+        String sql =
+                "DELETE FROM theatres WHERE id = ?";
 
         try (Connection connection = Database.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
             statement.setInt(1, id);
 
-            int rowsAffected = statement.executeUpdate();
+            int rowsAffected =
+                    statement.executeUpdate();
 
             if (rowsAffected > 0) {
-                System.out.println("Theatre deleted successfully!");
+
+                System.out.println(
+                        "Theatre deleted successfully!"
+                );
+
             } else {
+
                 System.out.println("Theatre not found.");
             }
 
         } catch (SQLException e) {
+
             System.out.println("Failed to delete theatre.");
             e.printStackTrace();
         }

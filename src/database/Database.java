@@ -67,6 +67,21 @@ public class Database {
         )
         """;
 
+        String bookingTable = """
+        CREATE TABLE IF NOT EXISTS bookings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            customer_id INTEGER NOT NULL,
+            show_id INTEGER NOT NULL,
+            seat_id INTEGER NOT NULL,
+            booking_time TEXT NOT NULL,
+            total_price REAL NOT NULL,
+            FOREIGN KEY (customer_id) REFERENCES customers(id),
+            FOREIGN KEY (show_id) REFERENCES shows(id),
+            FOREIGN KEY (seat_id) REFERENCES seats(id),
+            UNIQUE(show_id, seat_id)
+        )
+        """;
+
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
 
@@ -75,6 +90,7 @@ public class Database {
             statement.execute(showTable);
             statement.execute(customerTable);
             statement.execute(seatTable);
+            statement.execute(bookingTable);
 
             System.out.println("Database initialized successfully!");
 
