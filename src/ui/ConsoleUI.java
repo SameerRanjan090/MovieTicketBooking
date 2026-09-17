@@ -1,20 +1,21 @@
 package ui;
 
+import model.Booking;
 import model.Customer;
 import model.Movie;
+import model.Seat;
 import model.Show;
 import model.Theatre;
 
+import service.BookingService;
 import service.CustomerService;
 import service.MovieService;
+import service.SeatService;
 import service.ShowService;
 import service.TheatreService;
 
 import java.util.List;
 import java.util.Scanner;
-
-import model.Seat;
-import service.SeatService;
 
 public class ConsoleUI {
 
@@ -23,14 +24,19 @@ public class ConsoleUI {
     private final ShowService showService;
     private final CustomerService customerService;
     private final SeatService seatService;
+    private final BookingService bookingService;
+
     private final Scanner scanner;
 
     public ConsoleUI() {
+
         movieService = new MovieService();
         theatreService = new TheatreService();
         showService = new ShowService();
         customerService = new CustomerService();
         seatService = new SeatService();
+        bookingService = new BookingService();
+
         scanner = new Scanner(System.in);
     }
 
@@ -67,6 +73,18 @@ public class ConsoleUI {
                     break;
 
                 case 6:
+                    bookTicket();
+                    break;
+
+                case 7:
+                    cancelBooking();
+                    break;
+
+                case 8:
+                    viewBookings();
+                    break;
+
+                case 9:
                     running = false;
                     System.out.println(
                             "\nThank you for using Movie Ticket Booking System!"
@@ -74,7 +92,9 @@ public class ConsoleUI {
                     break;
 
                 default:
-                    System.out.println("\nInvalid choice. Please try again.");
+                    System.out.println(
+                            "\nInvalid choice. Please try again."
+                    );
             }
         }
 
@@ -95,7 +115,10 @@ public class ConsoleUI {
         System.out.println("3. Manage Shows");
         System.out.println("4. Manage Customers");
         System.out.println("5. View Theatre Seats");
-        System.out.println("6. Exit");
+        System.out.println("6. Book Ticket");
+        System.out.println("7. Cancel Booking");
+        System.out.println("8. View Bookings");
+        System.out.println("9. Exit");
         System.out.println("========================================");
     }
 
@@ -177,7 +200,8 @@ public class ConsoleUI {
 
         System.out.println("\n--- Movies ---");
 
-        List<Movie> movies = movieService.getAllMovies();
+        List<Movie> movies =
+                movieService.getAllMovies();
 
         if (movies.isEmpty()) {
             System.out.println("No movies found.");
@@ -216,7 +240,8 @@ public class ConsoleUI {
 
         int id = readInt("Enter movie ID: ");
 
-        Movie movie = movieService.getMovieById(id);
+        Movie movie =
+                movieService.getMovieById(id);
 
         if (movie == null) {
             System.out.println("Movie not found.");
@@ -230,7 +255,8 @@ public class ConsoleUI {
 
         int id = readInt("Enter movie ID: ");
 
-        Movie movie = movieService.getMovieById(id);
+        Movie movie =
+                movieService.getMovieById(id);
 
         if (movie == null) {
             System.out.println("Movie not found.");
@@ -240,11 +266,20 @@ public class ConsoleUI {
         System.out.println("\nCurrent movie:");
         System.out.println(movie);
 
-        String title = readString("New title: ");
-        String genre = readString("New genre: ");
-        String language = readString("New language: ");
-        int duration = readInt("New duration (minutes): ");
-        double rating = readDouble("New rating (0-10): ");
+        String title =
+                readString("New title: ");
+
+        String genre =
+                readString("New genre: ");
+
+        String language =
+                readString("New language: ");
+
+        int duration =
+                readInt("New duration (minutes): ");
+
+        double rating =
+                readDouble("New rating (0-10): ");
 
         movieService.updateMovie(
                 id,
@@ -260,7 +295,8 @@ public class ConsoleUI {
 
         int id = readInt("Enter movie ID: ");
 
-        Movie movie = movieService.getMovieById(id);
+        Movie movie =
+                movieService.getMovieById(id);
 
         if (movie == null) {
             System.out.println("Movie not found.");
@@ -270,7 +306,9 @@ public class ConsoleUI {
         System.out.println(movie);
 
         String confirmation =
-                readString("Delete this movie? (yes/no): ");
+                readString(
+                        "Delete this movie? (yes/no): "
+                );
 
         if (confirmation.equalsIgnoreCase("yes")) {
             movieService.deleteMovie(id);
@@ -338,9 +376,14 @@ public class ConsoleUI {
 
         System.out.println("\n--- Add Theatre ---");
 
-        String name = readString("Theatre name: ");
-        String location = readString("Location: ");
-        int totalSeats = readInt("Total seats: ");
+        String name =
+                readString("Theatre name: ");
+
+        String location =
+                readString("Location: ");
+
+        int totalSeats =
+                readInt("Total seats: ");
 
         theatreService.addTheatre(
                 name,
@@ -387,7 +430,8 @@ public class ConsoleUI {
 
     private void findTheatre() {
 
-        int id = readInt("Enter theatre ID: ");
+        int id =
+                readInt("Enter theatre ID: ");
 
         Theatre theatre =
                 theatreService.getTheatreById(id);
@@ -402,7 +446,8 @@ public class ConsoleUI {
 
     private void updateTheatre() {
 
-        int id = readInt("Enter theatre ID: ");
+        int id =
+                readInt("Enter theatre ID: ");
 
         Theatre theatre =
                 theatreService.getTheatreById(id);
@@ -415,9 +460,14 @@ public class ConsoleUI {
         System.out.println("\nCurrent theatre:");
         System.out.println(theatre);
 
-        String name = readString("New name: ");
-        String location = readString("New location: ");
-        int totalSeats = readInt("New total seats: ");
+        String name =
+                readString("New name: ");
+
+        String location =
+                readString("New location: ");
+
+        int totalSeats =
+                readInt("New total seats: ");
 
         theatreService.updateTheatre(
                 id,
@@ -429,7 +479,8 @@ public class ConsoleUI {
 
     private void deleteTheatre() {
 
-        int id = readInt("Enter theatre ID: ");
+        int id =
+                readInt("Enter theatre ID: ");
 
         Theatre theatre =
                 theatreService.getTheatreById(id);
@@ -442,7 +493,9 @@ public class ConsoleUI {
         System.out.println(theatre);
 
         String confirmation =
-                readString("Delete this theatre? (yes/no): ");
+                readString(
+                        "Delete this theatre? (yes/no): "
+                );
 
         if (confirmation.equalsIgnoreCase("yes")) {
             theatreService.deleteTheatre(id);
@@ -472,7 +525,8 @@ public class ConsoleUI {
             System.out.println("6. Back");
             System.out.println("========================================");
 
-            int choice = readInt("Enter your choice: ");
+            int choice =
+                    readInt("Enter your choice: ");
 
             switch (choice) {
 
@@ -562,10 +616,14 @@ public class ConsoleUI {
         for (Show show : shows) {
 
             Movie movie =
-                    movieService.getMovieById(show.getMovieId());
+                    movieService.getMovieById(
+                            show.getMovieId()
+                    );
 
             Theatre theatre =
-                    theatreService.getTheatreById(show.getTheatreId());
+                    theatreService.getTheatreById(
+                            show.getTheatreId()
+                    );
 
             String movieName =
                     movie != null
@@ -590,7 +648,8 @@ public class ConsoleUI {
 
     private void findShow() {
 
-        int id = readInt("Enter show ID: ");
+        int id =
+                readInt("Enter show ID: ");
 
         Show show =
                 showService.getShowById(id);
@@ -601,33 +660,46 @@ public class ConsoleUI {
         }
 
         Movie movie =
-                movieService.getMovieById(show.getMovieId());
+                movieService.getMovieById(
+                        show.getMovieId()
+                );
 
         Theatre theatre =
-                theatreService.getTheatreById(show.getTheatreId());
+                theatreService.getTheatreById(
+                        show.getTheatreId()
+                );
 
         System.out.println("\n--- Show Details ---");
         System.out.println("Show ID: " + show.getId());
 
         System.out.println(
                 "Movie: " +
-                        (movie != null ? movie.getTitle() : "Unknown")
+                        (movie != null
+                                ? movie.getTitle()
+                                : "Unknown")
         );
 
         System.out.println(
                 "Theatre: " +
-                        (theatre != null ? theatre.getName() : "Unknown")
+                        (theatre != null
+                                ? theatre.getName()
+                                : "Unknown")
         );
 
-        System.out.println("Time: " + show.getShowTime());
         System.out.println(
-                "Ticket Price: ₹" + show.getTicketPrice()
+                "Time: " + show.getShowTime()
+        );
+
+        System.out.println(
+                "Ticket Price: ₹" +
+                        show.getTicketPrice()
         );
     }
 
     private void updateShow() {
 
-        int id = readInt("Enter show ID: ");
+        int id =
+                readInt("Enter show ID: ");
 
         Show show =
                 showService.getShowById(id);
@@ -637,28 +709,8 @@ public class ConsoleUI {
             return;
         }
 
-        System.out.println("\nCurrent show details:");
-
-        Movie movie =
-                movieService.getMovieById(show.getMovieId());
-
-        Theatre theatre =
-                theatreService.getTheatreById(show.getTheatreId());
-
-        System.out.println(
-                "Movie: " +
-                        (movie != null ? movie.getTitle() : "Unknown")
-        );
-
-        System.out.println(
-                "Theatre: " +
-                        (theatre != null ? theatre.getName() : "Unknown")
-        );
-
-        System.out.println("Time: " + show.getShowTime());
-        System.out.println(
-                "Ticket Price: ₹" + show.getTicketPrice()
-        );
+        System.out.println("\nCurrent show:");
+        findShowDetails(show);
 
         viewMovies();
 
@@ -685,9 +737,46 @@ public class ConsoleUI {
         );
     }
 
+    private void findShowDetails(Show show) {
+
+        Movie movie =
+                movieService.getMovieById(
+                        show.getMovieId()
+                );
+
+        Theatre theatre =
+                theatreService.getTheatreById(
+                        show.getTheatreId()
+                );
+
+        System.out.println(
+                "Movie: " +
+                        (movie != null
+                                ? movie.getTitle()
+                                : "Unknown")
+        );
+
+        System.out.println(
+                "Theatre: " +
+                        (theatre != null
+                                ? theatre.getName()
+                                : "Unknown")
+        );
+
+        System.out.println(
+                "Time: " + show.getShowTime()
+        );
+
+        System.out.println(
+                "Ticket Price: ₹" +
+                        show.getTicketPrice()
+        );
+    }
+
     private void deleteShow() {
 
-        int id = readInt("Enter show ID: ");
+        int id =
+                readInt("Enter show ID: ");
 
         Show show =
                 showService.getShowById(id);
@@ -697,10 +786,12 @@ public class ConsoleUI {
             return;
         }
 
-        System.out.println("\nShow found.");
+        findShowDetails(show);
 
         String confirmation =
-                readString("Delete this show? (yes/no): ");
+                readString(
+                        "Delete this show? (yes/no): "
+                );
 
         if (confirmation.equalsIgnoreCase("yes")) {
             showService.deleteShow(id);
@@ -730,7 +821,8 @@ public class ConsoleUI {
             System.out.println("6. Back");
             System.out.println("========================================");
 
-            int choice = readInt("Enter your choice: ");
+            int choice =
+                    readInt("Enter your choice: ");
 
             switch (choice) {
 
@@ -885,7 +977,9 @@ public class ConsoleUI {
         System.out.println(customer);
 
         String confirmation =
-                readString("Delete this customer? (yes/no): ");
+                readString(
+                        "Delete this customer? (yes/no): "
+                );
 
         if (confirmation.equalsIgnoreCase("yes")) {
             customerService.deleteCustomer(id);
@@ -893,13 +987,14 @@ public class ConsoleUI {
             System.out.println("Delete cancelled.");
         }
     }
+
     // ========================================
-// SEAT MANAGEMENT
-// ========================================
+    // SEAT MANAGEMENT
+    // ========================================
 
     private void viewSeats() {
 
-        System.out.println("\n--- View Theatre Seats ---");
+        System.out.println("\n--- Theatre Seats ---");
 
         viewTheatres();
 
@@ -918,7 +1013,9 @@ public class ConsoleUI {
                 seatService.getSeatsByTheatre(theatreId);
 
         if (seats.isEmpty()) {
-            System.out.println("No seats found for this theatre.");
+            System.out.println(
+                    "No seats found for this theatre."
+            );
             return;
         }
 
@@ -957,6 +1054,337 @@ public class ConsoleUI {
         System.out.println(
                 "========================================"
         );
+    }
+
+    // ========================================
+    // BOOKING
+    // ========================================
+
+    private void bookTicket() {
+
+        System.out.println("\n========================================");
+        System.out.println("              BOOK TICKET");
+        System.out.println("========================================");
+
+        // Select customer
+        viewCustomers();
+
+        int customerId =
+                readInt("Enter customer ID: ");
+
+        Customer customer =
+                customerService.getCustomerById(customerId);
+
+        if (customer == null) {
+            System.out.println("Customer not found.");
+            return;
+        }
+
+        // Select show
+        viewShows();
+
+        int showId =
+                readInt("Enter show ID: ");
+
+        Show show =
+                showService.getShowById(showId);
+
+        if (show == null) {
+            System.out.println("Show not found.");
+            return;
+        }
+
+        // Display theatre and seats
+        Theatre theatre =
+                theatreService.getTheatreById(
+                        show.getTheatreId()
+                );
+
+        if (theatre == null) {
+            System.out.println(
+                    "Theatre associated with this show was not found."
+            );
+            return;
+        }
+
+        System.out.println(
+                "\nTheatre: " + theatre.getName()
+        );
+
+        List<Seat> seats =
+                seatService.getSeatsByTheatre(
+                        theatre.getId()
+                );
+
+        if (seats.isEmpty()) {
+            System.out.println("No seats available.");
+            return;
+        }
+
+        System.out.println("\nAvailable seats:");
+
+        for (Seat seat : seats) {
+
+            if (seat.isAvailable()) {
+
+                System.out.print(
+                        seat.getSeatNumber() + "  "
+                );
+            }
+        }
+
+        System.out.println();
+
+        String seatNumber =
+                readString(
+                        "\nEnter seat number: "
+                );
+
+        Seat selectedSeat = null;
+
+        for (Seat seat : seats) {
+
+            if (seat.getSeatNumber()
+                    .equalsIgnoreCase(seatNumber)) {
+
+                selectedSeat = seat;
+                break;
+            }
+        }
+
+        if (selectedSeat == null) {
+            System.out.println("Seat not found.");
+            return;
+        }
+
+        if (!selectedSeat.isAvailable()) {
+            System.out.println(
+                    "This seat is not available."
+            );
+            return;
+        }
+
+        System.out.println("\n----------- BOOKING SUMMARY -----------");
+
+        System.out.println(
+                "Customer: " + customer.getName()
+        );
+
+        System.out.println(
+                "Movie: " +
+                        getMovieName(show.getMovieId())
+        );
+
+        System.out.println(
+                "Theatre: " +
+                        theatre.getName()
+        );
+
+        System.out.println(
+                "Show Time: " +
+                        show.getShowTime()
+        );
+
+        System.out.println(
+                "Seat: " +
+                        selectedSeat.getSeatNumber()
+        );
+
+        System.out.println(
+                "Price: ₹" +
+                        show.getTicketPrice()
+        );
+
+        System.out.println(
+                "---------------------------------------"
+        );
+
+        String confirmation =
+                readString(
+                        "Confirm booking? (yes/no): "
+                );
+
+        if (!confirmation.equalsIgnoreCase("yes")) {
+
+            System.out.println(
+                    "Booking cancelled."
+            );
+
+            return;
+        }
+
+        boolean success =
+                bookingService.createBooking(
+                        customerId,
+                        showId,
+                        selectedSeat.getId()
+                );
+
+        if (success) {
+
+            System.out.println(
+                    "\n========== BOOKING CONFIRMED =========="
+            );
+
+            System.out.println(
+                    "Customer: " +
+                            customer.getName()
+            );
+
+            System.out.println(
+                    "Movie: " +
+                            getMovieName(show.getMovieId())
+            );
+
+            System.out.println(
+                    "Theatre: " +
+                            theatre.getName()
+            );
+
+            System.out.println(
+                    "Seat: " +
+                            selectedSeat.getSeatNumber()
+            );
+
+            System.out.println(
+                    "Price: ₹" +
+                            show.getTicketPrice()
+            );
+
+            System.out.println(
+                    "========================================"
+            );
+        }
+    }
+
+    private String getMovieName(int movieId) {
+
+        Movie movie =
+                movieService.getMovieById(movieId);
+
+        return movie != null
+                ? movie.getTitle()
+                : "Unknown";
+    }
+
+    // ========================================
+    // CANCEL BOOKING
+    // ========================================
+
+    private void cancelBooking() {
+
+        System.out.println("\n--- Cancel Booking ---");
+
+        viewBookings();
+
+        int bookingId =
+                readInt("Enter booking ID: ");
+
+        Booking booking =
+                bookingService.getBookingById(
+                        bookingId
+                );
+
+        if (booking == null) {
+            System.out.println("Booking not found.");
+            return;
+        }
+
+        String confirmation =
+                readString(
+                        "Cancel this booking? (yes/no): "
+                );
+
+        if (confirmation.equalsIgnoreCase("yes")) {
+
+            bookingService.cancelBooking(
+                    bookingId
+            );
+
+        } else {
+
+            System.out.println(
+                    "Cancellation aborted."
+            );
+        }
+    }
+
+    // ========================================
+    // VIEW BOOKINGS
+    // ========================================
+
+    private void viewBookings() {
+
+        System.out.println("\n--- Bookings ---");
+
+        List<Booking> bookings =
+                bookingService.getAllBookings();
+
+        if (bookings.isEmpty()) {
+            System.out.println("No bookings found.");
+            return;
+        }
+
+        System.out.printf(
+                "%-5s %-20s %-20s %-10s %-20s %-10s%n",
+                "ID",
+                "CUSTOMER",
+                "MOVIE",
+                "SEAT",
+                "BOOKING TIME",
+                "PRICE"
+        );
+
+        System.out.println(
+                "--------------------------------------------------------------------------------"
+        );
+
+        for (Booking booking : bookings) {
+
+            Customer customer =
+                    customerService.getCustomerById(
+                            booking.getCustomerId()
+                    );
+
+            Show show =
+                    showService.getShowById(
+                            booking.getShowId()
+                    );
+
+            String customerName =
+                    customer != null
+                            ? customer.getName()
+                            : "Unknown";
+
+            String movieName = "Unknown";
+
+            if (show != null) {
+                movieName =
+                        getMovieName(
+                                show.getMovieId()
+                        );
+            }
+
+            Seat seat =
+                    seatService.getSeatById(
+                            booking.getSeatId()
+                    );
+
+            String seatNumber =
+                    seat != null
+                            ? seat.getSeatNumber()
+                            : "Unknown";
+
+            System.out.printf(
+                    "%-5d %-20s %-20s %-10s %-20s ₹%-9.2f%n",
+                    booking.getId(),
+                    customerName,
+                    movieName,
+                    seatNumber,
+                    booking.getBookingTime(),
+                    booking.getTotalPrice()
+            );
+        }
     }
 
     // ========================================
