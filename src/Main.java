@@ -1,4 +1,5 @@
 import database.Database;
+import ui.ConsoleUI;
 
 public class Main {
 
@@ -6,6 +7,8 @@ public class Main {
 
         Database.initializeDatabase();
 
-        System.out.println("Application started.");
+        ConsoleUI consoleUI = new ConsoleUI();
+
+        consoleUI.start();
     }
 }
